@@ -32,10 +32,6 @@ const Chart = props => {
         },
       },
     },
-    tooltip: {
-      pointFormat:
-        '{series.name} had stockpiled <b>{point.y:,.0f}</b><br/>warheads in {point.x}',
-    },
     plotOptions: {
       area: {
         pointStart: pointStartDate,
