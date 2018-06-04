@@ -25,28 +25,19 @@ meterReadings.data.forEach(meterReading => {
   if (!uniqueMeters[meterId]) {
     uniqueMeters[meterId] = {
       [meterType]: {
-        [meterReadingId]: {
-          date: meterReading.Date,
-          totalKwH,
-        },
+        [meterReading.Date]: totalKwH,
       },
     };
   }
   // if this Type doesn't exist yet for this meterId, add it
   else if (!uniqueMeters[meterId][meterType]) {
     uniqueMeters[meterId][meterType] = {
-      [meterReadingId]: {
-        date: meterReading.Date,
-        totalKwH,
-      },
+      [meterReading.Date]: totalKwH,
     };
   }
   // else, append new data
   else {
-    uniqueMeters[meterId][meterType][meterReadingId] = {
-      date: meterReading.Date,
-      totalKwH,
-    };
+    uniqueMeters[meterId][meterType][meterReading.Date] = totalKwH;
   }
 });
 console.log('uniqueMeters', uniqueMeters);
