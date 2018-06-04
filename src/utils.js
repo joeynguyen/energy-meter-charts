@@ -4,13 +4,11 @@ export function getPointStartDate(BaseLoad) {
   const startDate = Object.keys(BaseLoad)[0];
   const startDateArr = startDate.split('-');
 
-  const pointStartDate = Date.UTC(
+  return Date.UTC(
     Number(startDateArr[0]),
     Number(startDateArr[1]),
     Number(startDateArr[2])
   );
-
-  return pointStartDate;
 }
 
 export function getMeterData() {

@@ -37,19 +37,10 @@ class App extends React.Component {
           data={uniqueMetersMap}
           columns={columns}
           width={200}
-          getTdProps={(state, rowInfo, column, instance) => {
+          getTdProps={(state, rowInfo) => {
             return {
-              onClick: (e, handleOriginal) => {
+              onClick: () => {
                 this.handleIdClick(rowInfo.original.id);
-
-                // IMPORTANT! React-Table uses onClick internally to trigger
-                // events like expanding SubComponents and pivots.
-                // By default a custom 'onClick' handler will override this functionality.
-                // If you want to fire the original onClick handler, call the
-                // 'handleOriginal' function.
-                if (handleOriginal) {
-                  handleOriginal();
-                }
               },
             };
           }}
