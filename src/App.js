@@ -22,6 +22,14 @@ const columns = [
 ];
 
 class App extends React.Component {
+  state = {
+    meterId: '',
+  };
+
+  handleIdClick(id) {
+    this.setState({ meterId: id });
+  }
+
   render() {
     return (
       <React.Fragment>
@@ -32,8 +40,7 @@ class App extends React.Component {
           getTdProps={(state, rowInfo, column, instance) => {
             return {
               onClick: (e, handleOriginal) => {
-                console.log('A Td Element was clicked!');
-                console.log('It was in this row:', rowInfo);
+                this.handleIdClick(rowInfo.original.id);
 
                 // IMPORTANT! React-Table uses onClick internally to trigger
                 // events like expanding SubComponents and pivots.
@@ -47,7 +54,7 @@ class App extends React.Component {
             };
           }}
         />
-        <Chart />
+        {this.state.meterId && <Chart data={meterData[this.state.meterId]} />}
       </React.Fragment>
     );
   }
