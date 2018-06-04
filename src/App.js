@@ -2,6 +2,8 @@ import React from 'react';
 import { render } from 'react-dom';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
+import ReactTable from 'react-table';
+import 'react-table/react-table.css';
 
 import meterReadings from './meters.json';
 
@@ -9,7 +11,6 @@ let uniqueMeters = {};
 meterReadings.data.forEach(meterReading => {
   const meterId = meterReading.Meter_ID;
   const meterType = meterReading.Type;
-  const meterReadingId = meterReading._id['$oid'];
   const meterReadingKeys = Object.keys(meterReading);
 
   let totalKwH = 0;
@@ -41,6 +42,11 @@ meterReadings.data.forEach(meterReading => {
   }
 });
 console.log('uniqueMeters', uniqueMeters);
+const uniqueMetersMap = Object.keys(uniqueMeters).map(meter => {
+  return {
+    id: meter,
+  };
+});
 
 const options = {
   chart: {
@@ -262,8 +268,40 @@ const options = {
   ],
 };
 
+const data = uniqueMetersMap;
+
+const columns = [
+  {
+    Header: 'Meter Id',
+    accessor: 'id', // String-based value accessors!
+    width: 200,
+  },
+];
+
 const App = () => (
   <div>
+    <ReactTable
+      data={data}
+      columns={columns}
+      width={200}
+      getTdProps={(state, rowInfo, column, instance) => {
+        return {
+          onClick: (e, handleOriginal) => {
+            console.log('A Td Element was clicked!');
+            console.log('It was in this row:', rowInfo);
+
+            // IMPORTANT! React-Table uses onClick internally to trigger
+            // events like expanding SubComponents and pivots.
+            // By default a custom 'onClick' handler will override this functionality.
+            // If you want to fire the original onClick handler, call the
+            // 'handleOriginal' function.
+            if (handleOriginal) {
+              handleOriginal();
+            }
+          },
+        };
+      }}
+    />
     <HighchartsReact highcharts={Highcharts} options={options} />
   </div>
 );
