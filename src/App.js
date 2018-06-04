@@ -9,21 +9,31 @@ console.log('meters', meters);
 
 let uniqueMeters = {};
 meters.data.forEach(meter => {
-  if (!uniqueMeters[meter.Meter_ID]) {
-    uniqueMeters = {
-      ...uniqueMeters,
-      [meter.Meter_ID]: {
+  const meterId = meter.Meter_ID;
+  const meterType = meter.Type;
+
+  // if meterId doesn't exist, add it
+  if (!uniqueMeters[meterId]) {
+    uniqueMeters[meterId] = {
+      [meter.Type]: {
         [meter._id['$oid']]: {
           ...meter,
         },
       },
     };
-  } else {
-    uniqueMeters[meter.Meter_ID] = {
-      ...uniqueMeters[meter.Meter_ID],
+  }
+  // if this Type doesn't exist yet for this meterId, add it
+  else if (!uniqueMeters[meterId][meterType]) {
+    uniqueMeters[meterId][meterType] = {
       [meter._id['$oid']]: {
         ...meter,
       },
+    };
+  }
+  // else, append new data
+  else {
+    uniqueMeters[meterId][meterType][meter._id['$oid']] = {
+      ...meter,
     };
   }
 });
