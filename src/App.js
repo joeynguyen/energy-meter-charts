@@ -3,21 +3,31 @@ import { render } from 'react-dom';
 import Highcharts from 'highcharts';
 import HighchartsReact from 'highcharts-react-official';
 
-import meters from './meters.json';
-
-console.log('meters', meters);
+import meterReadings from './meters.json';
 
 let uniqueMeters = {};
-meters.data.forEach(meter => {
-  const meterId = meter.Meter_ID;
-  const meterType = meter.Type;
+meterReadings.data.forEach(meterReading => {
+  const meterId = meterReading.Meter_ID;
+  const meterType = meterReading.Type;
+  const meterReadingId = meterReading._id['$oid'];
+  const meterReadingKeys = Object.keys(meterReading);
+
+  let totalKwH = 0;
+  meterReadingKeys.forEach(key => {
+    // if key is a number type
+    if (isFinite(Number(key))) {
+      // JS hack add numbers with decimals
+      totalKwH = (totalKwH * 1000 + meterReading[key] * 1000) / 1000;
+    }
+  });
 
   // if meterId doesn't exist, add it
   if (!uniqueMeters[meterId]) {
     uniqueMeters[meterId] = {
-      [meter.Type]: {
-        [meter._id['$oid']]: {
-          ...meter,
+      [meterType]: {
+        [meterReadingId]: {
+          date: meterReading.Date,
+          totalKwH,
         },
       },
     };
@@ -25,15 +35,17 @@ meters.data.forEach(meter => {
   // if this Type doesn't exist yet for this meterId, add it
   else if (!uniqueMeters[meterId][meterType]) {
     uniqueMeters[meterId][meterType] = {
-      [meter._id['$oid']]: {
-        ...meter,
+      [meterReadingId]: {
+        date: meterReading.Date,
+        totalKwH,
       },
     };
   }
   // else, append new data
   else {
-    uniqueMeters[meterId][meterType][meter._id['$oid']] = {
-      ...meter,
+    uniqueMeters[meterId][meterType][meterReadingId] = {
+      date: meterReading.Date,
+      totalKwH,
     };
   }
 });
