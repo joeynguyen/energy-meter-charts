@@ -11,21 +11,28 @@ export function getPointStartDate(BaseLoad) {
   );
 }
 
+function getDailyEnergyUsage(meterReading) {
+  const meterReadingKeys = Object.keys(meterReading);
+  let totalKwH = 0;
+
+  meterReadingKeys.forEach(key => {
+    // if key is a number type
+    if (isFinite(Number(key))) {
+      // JS hack for adding numbers with decimals
+      totalKwH = (totalKwH * 1000 + meterReading[key] * 1000) / 1000;
+    }
+  });
+
+  return totalKwH;
+}
+
 export function getMeterData() {
   let uniqueMeters = {};
   meterReadings.data.forEach(meterReading => {
     const meterId = meterReading.Meter_ID;
     const meterType = meterReading.Type;
-    const meterReadingKeys = Object.keys(meterReading);
 
-    let totalKwH = 0;
-    meterReadingKeys.forEach(key => {
-      // if key is a number type
-      if (isFinite(Number(key))) {
-        // JS hack add numbers with decimals
-        totalKwH = (totalKwH * 1000 + meterReading[key] * 1000) / 1000;
-      }
-    });
+    const totalKwH = getDailyEnergyUsage(meterReading);
 
     // if meterId doesn't exist, add it
     if (!uniqueMeters[meterId]) {
