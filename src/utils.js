@@ -28,28 +28,27 @@ function getDailyEnergyUsage(meterReading) {
 
 export function getMeterData() {
   let uniqueMeters = {};
+  let uniqueMetersMap = new Map();
   meterReadings.data.forEach(meterReading => {
     const meterId = meterReading.Meter_ID;
     const meterType = meterReading.Type;
 
     const totalKwH = getDailyEnergyUsage(meterReading);
 
-    // if meterId doesn't exist, add it
     if (!uniqueMeters[meterId]) {
+      // if meterId doesn't exist, add it
       uniqueMeters[meterId] = {
         [meterType]: {
           [meterReading.Date]: totalKwH,
         },
       };
-    }
-    // if this Type doesn't exist yet for this meterId, add it
-    else if (!uniqueMeters[meterId][meterType]) {
+    } else if (!uniqueMeters[meterId][meterType]) {
+      // if this Type doesn't exist yet for this meterId, add it
       uniqueMeters[meterId][meterType] = {
         [meterReading.Date]: totalKwH,
       };
-    }
-    // else, append new data
-    else {
+    } else {
+      // else, append new data
       uniqueMeters[meterId][meterType][meterReading.Date] = totalKwH;
     }
   });
