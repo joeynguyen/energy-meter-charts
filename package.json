@@ -6,6 +6,7 @@
     "highcharts": "6.1.0",
     "highcharts-react-official": "1.1.0",
     "react": "^16.4.0",
+    "react-bootstrap": "0.32.1",
     "react-dom": "^16.4.0",
     "react-scripts": "1.1.4",
     "react-table": "6.8.6"

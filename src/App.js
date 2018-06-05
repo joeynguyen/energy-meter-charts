@@ -1,5 +1,7 @@
 import React from 'react';
 import ReactTable from 'react-table';
+import { Table, Button } from 'react-bootstrap';
+
 import 'react-table/react-table.css';
 
 import Chart from './Chart';
@@ -7,19 +9,7 @@ import { getMeterData } from './utils';
 
 const meterData = getMeterData();
 
-const uniqueMetersMap = Object.keys(meterData).map(meter => {
-  return {
-    id: meter,
-  };
-});
-
-const columns = [
-  {
-    Header: 'Meter Id',
-    accessor: 'id', // String-based value accessors!
-    width: 200,
-  },
-];
+const meterIds = Object.keys(meterData);
 
 class App extends React.Component {
   state = {
@@ -30,23 +20,33 @@ class App extends React.Component {
     this.setState({ meterId: id });
   }
 
+  renderTds(ids) {
+    return ids.map(id => {
+      return (
+        <tr key={id}>
+          <td>
+            <Button onClick={() => this.handleIdClick(id)} bsStyle="link">
+              {id}
+            </Button>
+          </td>
+        </tr>
+      );
+    });
+  }
+
   render() {
     return (
-      <React.Fragment>
-        <ReactTable
-          data={uniqueMetersMap}
-          columns={columns}
-          width={200}
-          getTdProps={(state, rowInfo) => {
-            return {
-              onClick: () => {
-                this.handleIdClick(rowInfo.original.id);
-              },
-            };
-          }}
-        />
+      <div className="container">
+        <Table striped bordered condensed hover>
+          <thead>
+            <tr>
+              <th>Meter</th>
+            </tr>
+          </thead>
+          <tbody>{this.renderTds(meterIds)}</tbody>
+        </Table>
         {this.state.meterId && <Chart data={meterData[this.state.meterId]} />}
-      </React.Fragment>
+      </div>
     );
   }
 }
