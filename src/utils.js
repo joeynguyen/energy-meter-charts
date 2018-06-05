@@ -28,7 +28,6 @@ function getDailyEnergyUsage(meterReading) {
 
 export function getMeterData() {
   let uniqueMeters = {};
-  let uniqueMetersMap = new Map();
   meterReadings.data.forEach(meterReading => {
     const meterId = meterReading.Meter_ID;
     const meterType = meterReading.Type;
